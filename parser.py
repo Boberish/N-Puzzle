@@ -4,6 +4,7 @@ import cProfile
 
 arr = []
 
+
 # check correct number of arguments (just one for one file)
 if (len(sys.argv) != 2):
     print("problem with number of args")
