@@ -1,6 +1,7 @@
 import sys
 import collections
 import cProfile
+import heapq as heap
 
 arr = []
 # final_puzzle = ((1,2,3),(8,0,4),(7,6,5))
@@ -112,7 +113,7 @@ def h_cost(puzzle):
             real_idx = idx_dic[puzzle[x][y]]
             score += abs(x - real_idx[0]) + abs(y - real_idx[1])
              
-    return(score)
+    return(score * 2)
 
 def swap(puz, og_x, og_y, x, y):
     if x < 0 or y < 0 or x == size or y == size:
@@ -157,14 +158,20 @@ idx_dic = make_lookup_dic_heru(size)
 
 
 def doit(start):
+    que= []
+    heap.heapify(que)
     closedSet = set()
     openSet = {}
     cameFrom = {}
-    openSet[start] = [h_cost(start),0]
+    openSet[start] = (h_cost(start),0)
+    heap.heappush(que, openSet[start] + start )
+    # print( type((heap.heappop(que))[0]))
+    # sys.exit(1)
     i = 0
     while openSet:
         i += 1
-        current = min(openSet, key=(openSet.get))
+        # current = min(openSet, key=(openSet.get))
+        current = (heap.heappop(que))[2:]
         curGs = openSet[current][1]
         closedSet.add(current)
         del openSet[current]
@@ -175,7 +182,6 @@ def doit(start):
             for puz in path:
                 for inner in puz:
                     print(inner)
-                    # print("\n")
                 print("\n",end='')
             sys.exit(0)
 
@@ -184,7 +190,8 @@ def doit(start):
                 continue
             tmp_gscore = curGs + 1 # distance from current to neighbor is always 1 here
             if neigh not in openSet:
-                openSet[neigh] = [ h_cost(neigh) + tmp_gscore, tmp_gscore]
+                openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
+                heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh )
             elif tmp_gscore >= openSet[neigh][1]:
                 continue
             cameFrom[neigh] = current
