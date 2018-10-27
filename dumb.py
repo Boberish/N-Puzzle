@@ -20,16 +20,25 @@
 # # k['e'] = 4
 # # print(k)
 
-# import collections
+import collections
 
-# dic = collections.OrderedDict()
-# dic["keaton"] = 4
-# dic["aylor"] = 3
+dic = collections.OrderedDict()
+dic["keaton"] = [4,1]
+dic["aylor"] = [3,2]
+dic["billy"] = [1,3]
+dic["sally"] = [6,0]
+
+print(min(dic, key =dic.get))
 # # print(dic)
 # dic = collections.OrderedDict(sorted(dic.items(), key=lambda x: x[1]))
 
 # print(list(dic.keys()))
 
-keaton = [1,2,3,4,5]
-new = [num + 1 for num in keaton]
-print(new)
+# keaton = [1,2,3,4,5]
+# new = [num  for num in keaton]
+# print(new)
+
+# se = set(dic)
+# if 'aylor' in se:
+#     print("YOYO")
+# print(se)

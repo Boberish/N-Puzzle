@@ -3,6 +3,35 @@ import collections
 import cProfile
 
 arr = []
+# final_puzzle = ((1,2,3),(8,0,4),(7,6,5))
+# final_puzzle = ((1,2,3,4),(12,13,14,5),(11,0,15,6), (10,9,8,7))
+
+def make_goal(size):
+	num_tile = size * size
+	puzzle = [-1 for i in range(num_tile)]
+	cur = 1
+	x = 0
+	ix = 1
+	y = 0
+	iy = 0
+	while True:
+		puzzle[x + y * size] = cur
+		if cur == 0:
+			break
+		cur += 1
+		if x + ix == size or x + ix < 0 or (ix != 0 and puzzle[x + ix + y*size] != -1):
+			iy = ix
+			ix = 0
+		elif y + iy == size or y + iy < 0 or (iy != 0 and puzzle[x + (y+iy)*size] != -1):
+			ix = -iy
+			iy = 0
+		x += ix
+		y += iy
+		if cur == size * size:
+			cur = 0
+
+	return puzzle
+
 
 
 # check correct number of arguments (just one for one file)
@@ -67,12 +96,20 @@ def index_2d(search, data):
         except ValueError:
             pass
 
+def make_lookup_dic_heru(size):
+    dic = {}
+    for num in range(size * size):
+        dic[num] = index_2d(num, final_puzzle)
+    return(dic)
+# make_lookup_dic_heru(3)
+
+
 def h_cost(puzzle):
     score = 0
 
     for x in range(size):
         for y in range (size):
-            real_idx = index_2d(puzzle[x][y], final_puzzle)
+            real_idx = idx_dic[puzzle[x][y]]
             score += abs(x - real_idx[0]) + abs(y - real_idx[1])
              
     return(score)
@@ -94,33 +131,13 @@ def find_neighbors(puz):
     l = swap(puz, x, y, x + 1, y)
     return [e for e in [u,r,d,l] if e]  
 
+# def not_in_spot(puz):
+
+
 newArr = ()
 
 newArr = tuple(tuple(line) for line in arr)
-final_puzzle = ((1,2,3),(8,0,4),(7,6,5))
-# final_puzzle = ((1,2,3,4),(12,13,14,5),(11,0,15,6), (10,9,8,7))
-# print(newArr)
 
-
-closedSet = {}
-openSet = collections.OrderedDict()
-cameFrom = {}
-
-
-openSet[newArr] = [0,0]
-openSet[newArr][1] = h_cost(newArr)
-
-
-# print(openSet["small"][0])
-# print(openSet)
-# print (id(openSet[newArr]))
-# closedSet[newArr] = openSet[newArr]
-# del openSet[newArr]
-# print(closedSet)
-# print(id(closedSet[newArr]))
-
-# def sortstuff(x):
-#     return x[1][1]
 
 def get_path(cameFrom, current):
     done = []
@@ -130,23 +147,30 @@ def get_path(cameFrom, current):
         done.append(current)
     return (done)
 
+realfin = []
+final_puzzle = make_goal(size)
+for line in range(0,size*size,size):
+    realfin.append(final_puzzle[line:line + size])
+final_puzzle = tuple(tuple(x) for x in realfin)
+idx_dic = make_lookup_dic_heru(size)
+
+
 
 def doit(start):
-    closedSet = {}
-    openSet = collections.OrderedDict()
+    closedSet = set()
+    openSet = {}
     cameFrom = {}
-    openSet[start] = [0,h_cost(start)]
+    openSet[start] = [h_cost(start),0]
     i = 0
-    while len(openSet) > 0:
-        # i += 1
-        # print(i)
-        openSet = collections.OrderedDict(sorted(openSet.items(), key=lambda x: x[1][1]))
-        # print(openSet)
-        current = openSet.popitem(last=False)
-        # print(current[0])
-        if current[0] == final_puzzle:
-            print("SOLVED IT YOYOYO")
-            path = get_path(cameFrom, current[0])
+    while openSet:
+        i += 1
+        current = min(openSet, key=(openSet.get))
+        curGs = openSet[current][1]
+        closedSet.add(current)
+        del openSet[current]
+        if current == final_puzzle:
+            print("solved in %d iterations" % i)
+            path = get_path(cameFrom, current)
             print("steps to solve: %d" % len(path))
             for puz in path:
                 for inner in puz:
@@ -155,19 +179,15 @@ def doit(start):
                 print("\n",end='')
             sys.exit(0)
 
-        closedSet[current[0]] = current[1] 
-        # print(closedSet)
-        # print(current)
-        for neigh in find_neighbors(current[0]):
+        for neigh in find_neighbors(current):
             if neigh in closedSet:
                 continue
-            tmp_gscore = current[1][0] + 1 # distance from current to neighbor is always 1 here
-
+            tmp_gscore = curGs + 1 # distance from current to neighbor is always 1 here
             if neigh not in openSet:
-                openSet[neigh] = [tmp_gscore, h_cost(neigh) + tmp_gscore]
-            elif tmp_gscore >= openSet[neigh][0]:
+                openSet[neigh] = [ h_cost(neigh) + tmp_gscore, tmp_gscore]
+            elif tmp_gscore >= openSet[neigh][1]:
                 continue
-            cameFrom[neigh] = current[0]
+            cameFrom[neigh] = current
     print("not found")
         
 
