@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/parser.py",
             "console": "integratedTerminal",
             "args": [
-                "tough.txt"
+                "worst.txt"
             ],
             "stopOnEntry": false,
             "pythonPath": "/Users/jaylor/brew/bin/python3"

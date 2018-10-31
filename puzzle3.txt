@@ -8,13 +8,3 @@
 
 
 
-"name": "Python: Current File (Integrated Terminal)",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/parser.py",
-            "console": "integratedTerminal",
-            "args": [
-                "easypuzzle.txt"
-            ],
-            "stopOnEntry": false,
-            "pythonPath": "/Users/jaylor/brew/bin/python3"
