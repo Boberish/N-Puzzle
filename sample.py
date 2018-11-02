@@ -8,11 +8,13 @@ from heapq import *
 # keaton[1] = (2,2)
 # print(keaton)
 
-keaton = [1,2,3,4]
+keaton = [5,6,7,8]
 heapify(keaton)
-for i in range(len(keaton) - 1):
-    if keaton[i] == 3:
-       del keaton[i]
+for i,j in enumerate(keaton):
+    print(i,end =' ')
+    print(j)
+    if keaton[i] == 5:
+       print ("did")
 
 # heappop(keaton)
 

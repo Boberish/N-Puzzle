@@ -193,6 +193,10 @@ def init(start):
     final_puzzle = tuple(tuple(x) for x in realfin)
     idx_dic = make_lookup_dic_heru()
 
+def slow(que, neigh):
+    for i,j in enumerate(que):
+        if j[2:] == neigh:
+            del que[i]
 
 def doit(start):
     global final_puzzle
@@ -204,12 +208,11 @@ def doit(start):
     cameFrom = {}
     openSet[start] = (h_cost(start),0)
     heap.heappush(que, openSet[start] + start )
-    # print( type((heap.heappop(que))[0]))
-    # sys.exit(1)
     i = 0
     while openSet:
         i += 1
-        # current = min(openSet, key=(openSet.get))
+        if i == 100000:
+            sys.exit()
         current = (heap.heappop(que))[2:]
         curGs = openSet[current][1]
         closedSet.add(current)
@@ -231,19 +234,15 @@ def doit(start):
             if neigh not in openSet:
                 openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
                 heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh )
+
             elif tmp_gscore >= openSet[neigh][1]:
                 continue
             else:
                 openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
-                
-                for j in range(len(que)- 1):
-                    # print(que[i][2:])
-                    # sys.exit(1)
-                    if que[j][2:] == neigh:
-                        # print(que[i])
-                        del que[j]
-                # heap.heapify(que)
+                slow(que,neigh)
                 heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh)
+                # heap.heapify(que)
+
 
             cameFrom[neigh] = current
     print("not found")
