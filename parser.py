@@ -208,23 +208,37 @@ def doit(start):
     cameFrom = {}
     openSet[start] = (h_cost(start),0)
     heap.heappush(que, openSet[start] + start )
+    dups = {}
     i = 0
     while openSet:
         i += 1
         if i == 100000:
-            sys.exit()
-        current = (heap.heappop(que))[2:]
-        curGs = openSet[current][1]
+            # sys.exit()
+            pass
+        
+        current = (heap.heappop(que))
+        #check for dups
+        
+        try:
+            while dups[current] == 0:
+                del dups[current]
+                current = (heap.heappop(que))    
+        except:
+            pass
+        curGs = current[1]
+        current = current[2:]
+
         closedSet.add(current)
         del openSet[current]
+        
         if current == final_puzzle:
             print("solved in %d iterations" % i)
             path = get_path(cameFrom, current)
             print("steps to solve: %d" % len(path))
-            for puz in path:
-                for inner in puz:
-                    print(inner)
-                print("\n",end='')
+            # for puz in path:
+            #     for inner in puz:
+            #         print(inner)
+            #     print("\n",end='')
             sys.exit(0)
 
         for neigh in find_neighbors(current):
@@ -238,8 +252,9 @@ def doit(start):
             elif tmp_gscore >= openSet[neigh][1]:
                 continue
             else:
+                dups[openSet[neigh] + neigh] = 0
                 openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
-                slow(que,neigh)
+                # slow(que,neigh)
                 heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh)
                 # heap.heapify(que)
 
