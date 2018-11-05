@@ -77,6 +77,10 @@ def make_lookup_dic_heru():
 def h_cost(puzzle):
     global size
     global idx_dic
+    if (str(sys.argv[2]) == "mp"):
+        return (misplaced(puzzle))
+    if (str(sys.argv[2]) == "gt"):
+        return (g_thing(puzzle))
     score = 0
 
     for x in range(size):
@@ -89,6 +93,7 @@ def swap(puz, og_x, og_y, x, y):
     if x < 0 or y < 0 or x == size or y == size:
         return 0
     new = list(list(line) for line in puz)
+    # puz = puz
     new[og_x][og_y] = puz[x][y]
     new[x][y] = 0
     return tuple(tuple(line) for line in new)
@@ -96,10 +101,12 @@ def swap(puz, og_x, og_y, x, y):
 
 def find_neighbors(puz):
     x, y = index_2d(0, puz)
-    u = swap(puz, x, y, x, y + 1)
-    r = swap(puz, x, y, x - 1, y)
+    
+    
     d = swap(puz, x, y, x, y - 1)
     l = swap(puz, x, y, x + 1, y)
+    u = swap(puz, x, y, x, y + 1)
+    r = swap(puz, x, y, x - 1, y)
     return [e for e in [u,r,d,l] if e]  
 
 
@@ -111,7 +118,93 @@ def get_path(cameFrom, current):
         done.append(current)
     return (done)
 
+# def linear_conflicts(puzzle):
+#     global final_puzzle
+#     global size
+#     global idx_dic
+#     hold = 0
+#     hold2 = 0
+#     holddic = {}
 
+#     for x in range(size):
+#         if hold > 1 or hold2 > 1:
+#             same_line_goal(puzzle)
+        
+#         hold = 0
+#         hold2 = 0
+#         for y in range (size):
+#             Cx,Cy = x,y
+#             Rx,Ry = idx_dic[puzzle[x][y]]
+#             if Cx == Rx:
+#                 holddic[hold] = Cx,Cy
+#                 hold += 1
+#                 if hold > 1:
+                    
+                    
+#             Cx,Cy = y,x
+#             Rx,Ry = idx_dic[puzzle[y][x]]
+#             if Cy == Ry:
+#                 hold2 += 1
+            
+def misplaced(puzzle):
+    global size
+    count = 0
+    for x in range(size):
+        for y in range (size):
+            if puzzle[x][y] == final_puzzle[x][y]:
+                count += 1
+    return (size * size - count)
+
+def g_thing(puzzle):
+    global idx_dic
+    global final_puzzle
+    global size
+    tmp_puzzle = [list(line) for line in puzzle]
+    tmp_final = [list(line) for line in final_puzzle]
+    print (tmp_puzzle)
+
+    num = 0
+    count = 0
+    x,y = index_2d(num, puzzle)
+    while(tmp_puzzle != final_puzzle):
+        if((x,y) == index_2d(0, final_puzzle)):
+            x,y = index_2d(1, puzzle)
+            num = final_puzzle[x][y]
+            currentX, currentY = index_2d(num, tmp_puzzle)
+            tmp_puzzle = swap(tmp_puzzle, x, y, currentX, currentY)
+            count += 1
+
+        else :
+            x,y = index_2d(num, puzzle)
+            num = final_puzzle[x][y]
+            currentX, currentY = index_2d(num, tmp_puzzle)
+            print ("le 2 dans le current", currentX, currentY)
+            tmp_puzzle = swap(tmp_puzzle, x, y, currentX, currentY)
+            print (tmp_puzzle)
+            count += 1
+    return(count)
+
+
+
+
+    # global idx_dic
+    # global final_puzzle
+    # global size
+    # num = 0
+    # count = -1
+    # final = index_2d(0,final_puzzle)
+    # x,y = index_2d(0, puzzle)
+    # if (x,y) == final:
+    #     num = 1
+    #     x,y = 0,0
+    # while (x,y) != final: #look for 1st space if it starts at the correct place
+    #     x,y = index_2d(num,puzzle)
+    #     num = final_puzzle[x][y]
+    #     count += 1
+    # return(count)
+
+
+            
 
 
 
@@ -122,8 +215,9 @@ def get_path(cameFrom, current):
 def opening():
     start = []
     # check correct number of arguments (just one for one file)
-    if (len(sys.argv) != 2):
-        print("problem with number of args")
+
+    if len(sys.argv) != 3:
+        print("problem with args")
         sys.exit(1)
 
     # open file
@@ -198,6 +292,8 @@ def slow(que, neigh):
         if j[2:] == neigh:
             del que[i]
 
+
+
 def doit(start):
     global final_puzzle
     global size
@@ -212,13 +308,7 @@ def doit(start):
     i = 0
     while openSet:
         i += 1
-        if i == 100000:
-            # sys.exit()
-            pass
-        
         current = (heap.heappop(que))
-        #check for dups
-        
         try:
             while dups[current] == 0:
                 del dups[current]
@@ -254,10 +344,7 @@ def doit(start):
             else:
                 dups[openSet[neigh] + neigh] = 0
                 openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
-                # slow(que,neigh)
                 heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh)
-                # heap.heapify(que)
-
 
             cameFrom[neigh] = current
     print("not found")
