@@ -71,11 +71,11 @@ if __name__ == "__main__":
 	random.seed()
 
 	if args.solvable and args.unsolvable:
-		print "Can't be both solvable AND unsolvable, dummy !"
+		print ("Can't be both solvable AND unsolvable, dummy !")
 		sys.exit(1)
 
 	if args.size < 3:
-		print "Can't generate a puzzle with size lower than 2. It says so in the help. Dummy."
+		print ("Can't generate a puzzle with size lower than 2. It says so in the help. Dummy.")
 		sys.exit(1)
 
 	if not args.solvable and not args.unsolvable:
@@ -90,9 +90,26 @@ if __name__ == "__main__":
 	puzzle = make_puzzle(s, solvable=solv, iterations=args.iterations)
 
 	w = len(str(s*s))
-	print "# This puzzle is %s" % ("solvable" if solv else "unsolvable")
-	print "%d" % s
+	print ("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
+	print ("%d" % s)
 	for y in range(s):
 		for x in range(s):
-			print "%s" % (str(puzzle[x + y*s]).rjust(w)),
-		print
+			print ("%s" % (str(puzzle[x + y*s]).rjust(w)),)
+			
+		print()
+
+
+def puzzleGenerator(size):
+	solv = True
+	s = size
+	puzzle = make_puzzle(s, solvable=solv, iterations=10000)
+
+	w = len(str(s*s))
+	puzzleList = []
+	print ("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
+	print ("%d" % s)
+	for y in range(s):
+		for x in range(s):
+			puzzleList.append("%s" % (str(puzzle[x + y*s]).rjust(w)),)
+	# print(puzzleList)
+	return puzzleList
