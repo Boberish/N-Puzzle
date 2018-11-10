@@ -104,8 +104,8 @@ def h_cost(puzzle):
         for y in range (size):
             real_idx = idx_dic[puzzle[x][y]]
             score += abs(x - real_idx[0]) + abs(y - real_idx[1])
-    # return(score)
-    return(score + lineByline(puzzle))
+    return(score)
+    # return(score + lineByline(puzzle))
     # return(score + linear_conflicts(puzzle))
 
 # def swap(puz, og_x, og_y, x, y):
@@ -126,9 +126,11 @@ def h_cost(puzzle):
 def swap(puz, og_x, og_y, x, y):
     if x < 0 or y < 0 or x == size or y == size:
         return 0
-    new = list(map(list,puz))
+    # new = list(map(list,puz))
     # np = numpy.array(puz)
-    
+    new = [row.copy() for row in puz]
+    print(new)
+    sys.exit(1)
     # print(np)
     # sys.exit(1)
     # puz = puz
@@ -371,7 +373,7 @@ def flatten(puz):
 
 
 def is_solvable(puz):
-    global idx_dic
+    # global idx_dic
     global final_puzzle
     global size
     
@@ -388,8 +390,8 @@ def is_solvable(puz):
             j += i + 1
             if a[i] == 0 or a[j] == 0:
                 continue
-            tmp1 = a[i]
-            tmp2 = a[j]
+            # tmp1 = a[i]
+            # tmp2 = a[j]
             if final.index(a[i]) >= final.index(a[j]):
                  inv += 1
     
