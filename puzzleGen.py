@@ -100,6 +100,7 @@ if __name__ == "__main__":
 
 
 def puzzleGenerator(size):
+	# print("i'm in Puzzle Generator!")
 	solv = True
 	s = size
 	puzzle = make_puzzle(s, solvable=solv, iterations=10000)
