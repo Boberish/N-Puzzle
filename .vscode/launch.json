@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/parser.py",
             "console": "integratedTerminal",
             "args": [
-                "test1.txt","gt"
+                "4possible","a"
             ],
             "stopOnEntry": false,
             "pythonPath": "/Users/jaylor/brew/bin/python3"
