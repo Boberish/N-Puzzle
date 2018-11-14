@@ -60,11 +60,13 @@ class MyMainWindow(tk.Frame):
         choice_gashing = tk.Radiobutton(self, text="Not in Place", variable=var_choix, value="np")
         choice_Misplaced = tk.Radiobutton(self, text="n-MaxSwap", variable=var_choix, value="gt")
         choice_Greedy = tk.Radiobutton(self, text="Super Fast", variable=var_choix, value="gr")
+        choice_Dijkstra = tk.Radiobutton(self, text="Uniform Cost Algorithm", variable=var_choix, value="uc")
         choice_manhatthan.pack()
         choice_manhatthan_linear.pack()
         choice_gashing.pack()
         choice_Misplaced.pack()
         choice_Greedy.pack()
+        choice_Dijkstra.pack()
 
         button = tk.Button(self, text="Start The N-Puzzle", command=lambda: self.startNpuzzle(var_size, var_choix, var_solv))
         button.pack()
@@ -72,7 +74,6 @@ class MyMainWindow(tk.Frame):
     def startNpuzzle(self, var_size, var_choix, var_solv):
         global retPath
         global lst
-        global alreadyBeenHere
 
         interface.destroy()
 
