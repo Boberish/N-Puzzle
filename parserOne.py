@@ -486,7 +486,7 @@ def doit(start):
             #     heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh)
 
             cameFrom[neigh] = current
-    print("not found")
+    print("Thereis no Solution for this Puzzle")
 
 
 

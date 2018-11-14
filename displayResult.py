@@ -85,18 +85,17 @@ class MyMainWindow(tk.Frame):
         retPuzz = puzzleGenSolvability(True, size)
         retPath = staringNpuzzleWithGui(size, retPuzz, var_choix)
 
-        nbStepPath = str(len(retPath) - 2)
+        nbStepPath = str(len(retPath))
         retPath = reversed(retPath)
         lst = iter(retPath)
 
         puzz = next(lst)
-        print("puzz in startNpuzzle", puzz)
         self.printPuzzle(puzz, nbStepPath)
 
     def printPuzzle(self, puzz, nbStepPath):
-        nbIteration = "55000"
-        memComplexity = " 54846mb"
-        tk.Label(self.Frame1bis, text='Here we go, we save the puzzle in ' + nbStepPath + ' steps \n and with ' + nbIteration + ' Iterations. \n Memory complexity: ' + memComplexity + '.', fg='#228B22', font=LARGE_FONT).grid(row=1, column=1)
+        # nbIteration = "55000"
+        # memComplexity = " 54846mb"
+        tk.Label(self.Frame1bis, text='Here we go, we save the puzzle in ' + str(settings.nbStepPath) + ' steps \n and with ' + str(settings.nbIteration) + ' Iterations. \n Memory complexity: ' + memComplexity + '.', fg='#228B22', font=LARGE_FONT).grid(row=1, column=1)
 
         self.next_button = tk.Button(self.Frame2, width=7, height=2, text="Next Step", padx=10, pady=10, command=lambda: self.nextStep(x, y, nbStepPath))
         self.exit_button = tk.Button(self.Frame2, width=7, height=2, text="Exit", padx=10, pady=10, command=self.quit)
@@ -135,4 +134,7 @@ myWindow.eval('tk::PlaceWindow %s center' % myWindow.winfo_pathname(myWindow.win
 interface = MyMainWindow(myWindow)
 
 interface.mainloop()
-interface.destroy()
+try:
+    interface.destroy()
+except:
+    pass

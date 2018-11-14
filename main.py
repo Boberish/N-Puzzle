@@ -4,7 +4,7 @@ from settings import *
 def main():
     settings.initGlobals()
     start = parsing(opening())
-    print("HERE in main start", start)
+    print("Staring puzzle", start)
     init(start)
     doit(start)
 
