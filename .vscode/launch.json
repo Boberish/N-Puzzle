@@ -8,13 +8,13 @@
             "name": "Python: Current File (Integrated Terminal)",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/parser.py",
+            "program": "${workspaceFolder}/displayResult.py",
+            // "program": "${workspaceFolder}/keatongen.py",
             "console": "integratedTerminal",
-            "args": [
-                "4possible","a"
-            ],
+            // "args": [ "solvable.txt","a"
+            // ],
             "stopOnEntry": false,
-            "pythonPath": "/Users/jaylor/brew/bin/python3"
+            // "pythonPath": "/Users/jaylor/brew/bin/python3"
         },
         {
             "name": "Python: Attach",
