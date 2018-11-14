@@ -489,15 +489,7 @@ def doit(start):
     print("not found")
 
 
-def main():
-    settings.initGlobals()
-    start = parsing(opening())
-    print("HERE in main start", start)
-    init(start)
-    doit(start)
 
-
-# main()
 
 
 
