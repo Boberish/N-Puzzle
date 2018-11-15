@@ -2,17 +2,7 @@ import sys
 import cProfile
 import heapq as heap
 import settings
-# import numpy
 
-#######globals:
-# final_puzzle = []
-# size = 0
-# idx_dic = {}
-
-
-
-# final_puzzle = ((1,2,3),(8,0,4),(7,6,5))
-# final_puzzle = ((1,2,3,4),(12,13,14,5),(11,0,15,6), (10,9,8,7))
 
 def make_goal():
     num_tile = settings.size * settings.size
@@ -40,18 +30,7 @@ def make_goal():
 
     return puzzle
 
-def swap(puz, og_x, og_y, x, y):
-    if x < 0 or y < 0 or x == settings.size or y == settings.size:
-        return 0
-    np = numpy.array(puzz)
-    print(np)
-    sys.exit(0)
-    new = list(list(line) for line in puz)
-    # if og_x == x:
 
-    new[og_x][og_y] = puz[x][y]
-    new[x][y] = 0
-    return tuple(tuple(line) for line in new)
 
 def swapWithNb(puz, og_x, og_y, x, y, nb):
     if x < 0 or y < 0 or x == settings.size or y == settings.size:
@@ -85,69 +64,36 @@ def make_lookup_dic_heru():
 
 
 def h_cost(puzzle):
-    # global idx_dic
-    # if (str(sys.argv[2]) == "mp"):
-    #     return (misplaced(puzzle))
-    # if (str(sys.argv[2]) == "gt"):
-    #     ret = g_thing(puzzle, 0, 0)
-    #     return (ret)
-    score = 0
+    if settings.heristicChoice == 'md':
+        return (manhat(puzzle))
+    if settings.heristicChoice == 'np':
+        return (misplaced(puzzle))
+    if settings.heristicChoice == 'gt':
+        ret = g_thing(puzzle, 0, 0)
+    if settings.heristicChoice == 'lc':
+        return (manhat(puzzle) + lineByline(puzzle))
+    if settings.heristicChoice == 'gr':
+        return  (manhat(puzzle) * 5)
+    if settings.heristicChoice == 'uc':
+        return (0)    
 
+def manhat(puzzle):
+    score = 0
     for x in range(settings.size):
         for y in range (settings.size):
             real_idx = settings.idx_dic[puzzle[x][y]]
             score += abs(x - real_idx[0]) + abs(y - real_idx[1])
-    # return(score)
-    return((score * 5))
-    # return(score + linear_conflicts(puzzle))
+    return(score)
 
-# def swap(puz, og_x, og_y, x, y):
-#     if x < 0 or y < 0 or x == size or y == size:
-#         return 0
-#     new = list(list(line) for line in puz)
-#     # np = numpy.array(puz)
-
-#     # print(np)
-#     # sys.exit(1)
-#     # puz = puz
-#     new[og_x][og_y] = puz[x][y]
-#     new[x][y] = 0
-
-
-#     return tuple(tuple(line) for line in new)
 
 def swap(puz, og_x, og_y, x, y):
     if x < 0 or y < 0 or x == settings.size or y == settings.size:
         return 0
     new = list(map(list,puz))
-    # np = numpy.array(puz)
-    # new = [row.copy() for row in puz]
-    # print(new)
-    # sys.exit(1)
-    # print(np)
-    # sys.exit(1)
-    # puz = puz
     new[og_x][og_y] = puz[x][y]
     new[x][y] = 0
-
-
     return tuple(map(tuple,new))
 
-
-# def swap(puz, og_x, og_y, x, y):
-#     if x < 0 or y < 0 or x == size or y == size:
-#         return 0
-#     # new = list(list(line) for line in puz)
-#     np = numpy.array(puz)
-
-#     # print(np)
-#     # sys.exit(1)
-#     # puz = puz
-#     np[og_x][og_y] = puz[x][y]
-#     np[x][y] = 0
-#     print(tuple(map(tuple,np)))
-#     sys.exit(1)
-#     return tuple(map(tuple,np))
 
 def find_neighbors(puz):
     x, y = index_2d(0, puz)
@@ -176,7 +122,6 @@ def misplaced(puzzle):
     return (settings.size * settings.size - count)
 
 def g_thing(puzzle, nb, count):
-    # global idx_dic
 
     if (puzzle == settings.final_puzzle):
         return (count)
@@ -188,74 +133,20 @@ def g_thing(puzzle, nb, count):
         count += 1
     return g_thing(puzzle, nb + 1, count)
 
-def linear_conflicts(puzzle):
-    # global idx_dic
-    hold = 0
-    hold2 = 0
-    holddic = {}
-    count = 0
-
-    for x in range(settings.size):
-        hold = 0
-        for y in range (settings.size):
-            Cx,Cy = x,y
-            Rx, Ry = settings.idx_dic[puzzle[x][y]]
-            if Cx == Rx and Cy != Ry:
-                hold += 1
-                if hold > 1:
-                    count += check_line2(puzzle[Cx], 'h', 0)
-                    break
-
-    for y in range(settings.size):
-        hold = 0
-        for x in range (settings.size):
-            Cx,Cy = x,y
-            Rx, Ry = settings.idx_dic[puzzle[x][y]]
-            # tmp = puzzle[Cx][Cy]
-            if Cx != Rx and Cy == Ry:
-                hold += 1
-                if hold > 1:
-                    send = [thing[Cy] for thing in puzzle]
-                    count += check_line2(send, 'v', 0)
-                    break
-    return(count)
 
 def lineByline(puzzle):
     count = 0
     for x in range(len(puzzle)):
         count += check_line2(puzzle[x],'h', x)
         send = [t[x] for t in puzzle]
-        # send = send[::-1]
         count += check_line2(send,'v', x)
-    # if count > 4:
-    # print (puzzle)
-    # sys.exit()
     return(count)
 
-def check_line(puzzle):
-    g_pos = {}
-    # global idx_dic
-    count = 0
-    for i,num in enumerate(puzzle):
-        g_pos[i] = settings.idx_dic[num]
 
-    for i in range(len(puzzle) - 1):
-        for y in range(len(puzzle) - 1):
-            y = i
-            if puzzle[i] == 0 or puzzle[y + 1] == 0:
-                continue
-            if g_pos[i][0] == g_pos[1 + y][0]:
-                if g_pos[i][1] > g_pos[1 + y][1]:
-                    # count += 1
-                    return(2)
-    # return(count * 2)
 
 
 def check_line2(line, direction, idx):
-    # global idx_dic
     count = 0
-    # for i in range(len(line) - 1):
-
     for i in range(len(line) - 1):
         for j in range(len(line) - i - 1):
             j += i + 1
@@ -271,7 +162,6 @@ def check_line2(line, direction, idx):
                 if settings.idx_dic[line[i]][0] == settings.idx_dic[line[j]][0] and idx == settings.idx_dic[line[i]][0]:
                     if  settings.idx_dic[line[i]][1] > settings.idx_dic[line[j]][1]:
                         count += 1
-    # return(0)
     return count * 2
 
 
@@ -361,7 +251,6 @@ def flatten(puz):
 
 
 def is_solvable(puz):
-    # global idx_dic
 
     inv = 0
     startidx = [puz.index(line) for line in puz for num in line if num == 0]
@@ -376,8 +265,6 @@ def is_solvable(puz):
             j += i + 1
             if a[i] == 0 or a[j] == 0:
                 continue
-            # tmp1 = a[i]
-            # tmp2 = a[j]
             if final.index(a[i]) >= final.index(a[j]):
                 inv += 1
 
@@ -388,7 +275,6 @@ def is_solvable(puz):
         else:
             print ("UNSOLVABLE")
             return(1)
-            # sys.exit(1)
     else:
         if inv % 2 == 0:
             if g % 2 != 0:
@@ -396,10 +282,7 @@ def is_solvable(puz):
                 return 0
             else:
                 print("UNSOLVABLE")
-
                 return (1)
-            # sys.exit(1)
-
         else:
             if g % 2 == 0:
                 print("solvable")
@@ -407,15 +290,11 @@ def is_solvable(puz):
             else:
                 print("unsolvable")
                 return (1)
-            # sys.exit(1)
 
 
 
 def init(start):
-    # global idx_dic
-    # print("idx in init = ", settings.idx_dic)
     realfin = []
-    # start = tuple(tuple(line) for line in start)
     settings.final_puzzle = make_goal()
     for line in range(0, settings.size * settings.size, settings.size):
         realfin.append(settings.final_puzzle[line:line + settings.size])
@@ -431,7 +310,7 @@ def slow(que, neigh):
 
 
 def doit(start):
-    # is_solvable(start)
+    is_solvable(start)
 
     que = []
     heap.heapify(que)
@@ -442,17 +321,16 @@ def doit(start):
     heap.heappush(que, openSet[start] + start )
     dups = {}
     i = 0
+    j = 0
+    most = 0
     while openSet:
         i += 1
-        # if i == 100000:
-        #     sys.exit(1)
+        j -= 1
+        if j > most:
+            most = j
+
         current = (heap.heappop(que))
-        # try:
-        #     while dups[current] == 0:
-        #         del dups[current]
-        #         current = (heap.heappop(que))
-        # except:
-        #     pass
+
         curGs = current[1]
         current = current[2:]
 
@@ -463,34 +341,26 @@ def doit(start):
             print("solved in %d iterations" % i)
             path = get_path(cameFrom, current)
             print("steps to solve: %d" % len(path))
-            return(path)
-            # for puz in path:
-            #     for inner in puz:
-            #         print(inner)
-            #     print("\n",end='')
-            # sys.exit(0)
+            return(path,i,most + len(closedSet))
 
         for neigh in find_neighbors(current):
             if neigh in closedSet:
                 continue
-            tmp_gscore = curGs + 1 # distance from current to neighbor is always 1 here
+            tmp_gscore = curGs + 1 
             if neigh not in openSet:
                 openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
                 heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh )
+                j += 1
 
             elif tmp_gscore >= openSet[neigh][1]:
                 continue
-            # else:
-            #     dups[openSet[neigh] + neigh] = 0
-            #     openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
-            #     heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh)
 
             cameFrom[neigh] = current
-    print("Thereis no Solution for this Puzzle")
+    print("There is no Solution for this Puzzle")
 
 
 
 
 
 
-# arr = (4,1,((1,2,3),(2,3,4)(2,3,4)))
+
