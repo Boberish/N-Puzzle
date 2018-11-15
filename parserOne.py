@@ -69,11 +69,11 @@ def h_cost(puzzle):
     if settings.heristicChoice == 'np':
         return (misplaced(puzzle))
     if settings.heristicChoice == 'gt':
-        ret = g_thing(puzzle, 0, 0)
+        return g_thing(puzzle, 0, 0)
     if settings.heristicChoice == 'lc':
         return (manhat(puzzle) + lineByline(puzzle))
-    # if settings.heristicChoice == 'gr':
-    #     return  (manhat(puzzle) * 5)
+    if settings.heristicChoice == 'gr':
+        return (manhat(puzzle) * 5)
     if settings.heristicChoice == 'uc':
         return (0)    
 
