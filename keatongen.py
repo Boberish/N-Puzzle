@@ -22,7 +22,6 @@ def randpuz():
     return (is_solvable(done), done)
 
 def puzzleGenSolvability(solv, size):
-    print("IsIT Solvable in puzzleGenSolvability: ", solv)
     settings.size = size
     if solv == True:
         while 1:
