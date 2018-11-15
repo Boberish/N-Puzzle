@@ -1,8 +1,6 @@
 import sys
-import cProfile
 import heapq as heap
 import settings
-
 
 def make_goal():
     num_tile = settings.size * settings.size
@@ -29,8 +27,6 @@ def make_goal():
             cur = 0
 
     return puzzle
-
-
 
 def swapWithNb(puz, og_x, og_y, x, y, nb):
     if x < 0 or y < 0 or x == settings.size or y == settings.size:
@@ -62,7 +58,6 @@ def make_lookup_dic_heru():
         dic[num] = index_2d(num, settings.final_puzzle)
     return(dic)
 
-
 def h_cost(puzzle):
     if settings.heristicChoice == 'md':
         return (manhat(puzzle))
@@ -88,7 +83,6 @@ def manhat(puzzle):
             score += abs(x - real_idx[0]) + abs(y - real_idx[1])
     return(score)
 
-
 def swap(puz, og_x, og_y, x, y):
     if x < 0 or y < 0 or x == settings.size or y == settings.size:
         return 0
@@ -96,7 +90,6 @@ def swap(puz, og_x, og_y, x, y):
     new[og_x][og_y] = puz[x][y]
     new[x][y] = 0
     return tuple(map(tuple,new))
-
 
 def find_neighbors(puz):
     x, y = index_2d(0, puz)
@@ -106,7 +99,6 @@ def find_neighbors(puz):
     r = swap(puz, x, y, x - 1, y)
     return [e for e in [u,r,d,l] if e]
 
-
 def get_path(cameFrom, current):
     done = []
     done.append(current)
@@ -114,7 +106,6 @@ def get_path(cameFrom, current):
         current = cameFrom[current]
         done.append(current)
     return (done)
-
 
 def misplaced(puzzle):
     count = 0
@@ -136,7 +127,6 @@ def g_thing(puzzle, nb, count):
         count += 1
     return g_thing(puzzle, nb + 1, count)
 
-
 def lineByline(puzzle):
     count = 0
     for x in range(len(puzzle)):
@@ -144,9 +134,6 @@ def lineByline(puzzle):
         send = [t[x] for t in puzzle]
         count += check_line2(send,'v', x)
     return(count)
-
-
-
 
 def check_line2(line, direction, idx):
     count = 0
@@ -166,27 +153,6 @@ def check_line2(line, direction, idx):
                     if  settings.idx_dic[line[i]][1] > settings.idx_dic[line[j]][1]:
                         count += 1
     return count * 2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def opening():
     start = []
@@ -254,7 +220,6 @@ def flatten(puz):
     a = list(x for y in puz for x in y)
     return(a)
 
-
 def is_solvable(puz):
 
     inv = 0
@@ -290,8 +255,6 @@ def is_solvable(puz):
             else:
                 return (1)
 
-
-
 def init(start):
     realfin = []
     settings.final_puzzle = make_goal()
@@ -299,14 +262,6 @@ def init(start):
         realfin.append(settings.final_puzzle[line:line + settings.size])
     settings.final_puzzle = tuple(tuple(x) for x in realfin)
     settings.idx_dic = make_lookup_dic_heru()
-
-
-def slow(que, neigh):
-    for i,j in enumerate(que):
-        if j[2:] == neigh:
-            del que[i]
-
-
 
 def doit(start):
     if is_solvable(start) == 1:
@@ -329,15 +284,11 @@ def doit(start):
         j -= 1
         if j > most:
             most = j
-
         current = (heap.heappop(que))
-
         curGs = current[1]
         current = current[2:]
-
         closedSet.add(current)
         del openSet[current]
-
         if current == settings.final_puzzle:
             print("solved in %d iterations" % i)
             path = get_path(cameFrom, current)
@@ -345,13 +296,11 @@ def doit(start):
             print("time complexity: %d"% i)
             print("space complexity: %d"% (len(closedSet) + most))
             pathrev = reversed(path)
-
             for puz in pathrev:
                 for inner in puz:
                     print(inner)
                 print("\n",end='')
             return(path,i,most + len(closedSet))
-
         for neigh in find_neighbors(current):
             if neigh in closedSet:
                 continue
@@ -360,10 +309,8 @@ def doit(start):
                 openSet[neigh] = ( h_cost(neigh) + tmp_gscore, tmp_gscore)
                 heap.heappush(que,(openSet[neigh][0], tmp_gscore) + neigh )
                 j += 1
-
             elif tmp_gscore >= openSet[neigh][1]:
                 continue
-
             cameFrom[neigh] = current
     print("There is no Solution for this Puzzle")
 
