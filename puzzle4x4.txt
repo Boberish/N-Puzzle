@@ -1,0 +1,8 @@
+# ths is a coment
+#this is also a comment
+   4
+10 11  6  8 #lots of junk
+ 5 13  7 12 # junk
+15  4  2  3 ####
+14  1  0  9                 ###crap ## 35
+
