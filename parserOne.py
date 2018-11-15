@@ -66,16 +66,19 @@ def make_lookup_dic_heru():
 def h_cost(puzzle):
     if settings.heristicChoice == 'md':
         return (manhat(puzzle))
-    if settings.heristicChoice == 'np':
+    elif settings.heristicChoice == 'np':
         return (misplaced(puzzle))
-    if settings.heristicChoice == 'gt':
-        ret = g_thing(puzzle, 0, 0)
-    if settings.heristicChoice == 'lc':
+    elif settings.heristicChoice == 'gt':
+        return g_thing(puzzle, 0, 0)
+    elif settings.heristicChoice == 'lc':
         return (manhat(puzzle) + lineByline(puzzle))
-    # if settings.heristicChoice == 'gr':
-    #     return  (manhat(puzzle) * 5)
-    if settings.heristicChoice == 'uc':
-        return (0)    
+    elif settings.heristicChoice == 'gr':
+        return (manhat(puzzle) * 5)
+    elif settings.heristicChoice == 'uc':
+        return (0)
+    else:
+        print("invalid heursitic")
+        sys.exit(1)    
 
 def manhat(puzzle):
     score = 0
@@ -192,7 +195,8 @@ def opening():
     if len(sys.argv) != 3:
         print("problem with args")
         sys.exit(1)
-
+    else:
+        settings.heristicChoice = sys.argv[2]
     # open file
     try:
         with open(sys.argv[1], 'r') as puzzle:
@@ -270,25 +274,19 @@ def is_solvable(puz):
 
     if settings.size % 2 != 0:
         if inv % 2 == 0:
-            print("solvable")
             return 0
         else:
-            print ("UNSOLVABLE")
             return(1)
     else:
         if inv % 2 == 0:
             if g % 2 != 0:
-                print("solvable")
                 return 0
             else:
-                print("UNSOLVABLE")
                 return (1)
         else:
             if g % 2 == 0:
-                print("solvable")
                 return 0
             else:
-                print("unsolvable")
                 return (1)
 
 
@@ -310,7 +308,9 @@ def slow(que, neigh):
 
 
 def doit(start):
-    is_solvable(start)
+    if is_solvable(start) == 1:
+        print("unsolvable")
+        sys.exit(1)
 
     que = []
     heap.heapify(que)
@@ -341,6 +341,8 @@ def doit(start):
             print("solved in %d iterations" % i)
             path = get_path(cameFrom, current)
             print("steps to solve: %d" % len(path))
+            print("time complexity: %d"% i)
+            print("space complexity: %d"% (len(closedSet) + most))
             return(path,i,most + len(closedSet))
 
         for neigh in find_neighbors(current):

@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/displayResult.py",
             // "program": "${workspaceFolder}/keatongen.py",
             "console": "integratedTerminal",
-            // "args": [ "solvable.txt","a"
+            // "args": [ "worst.txt","md"
             // ],
             "stopOnEntry": false,
             // "pythonPath": "/Users/jaylor/brew/bin/python3"
