@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/Users/pde-maul/brew/bin/python3",
+    "python.pythonPath": "/Users/jaylor/brew/bin/python3",
     "python.linting.enabled": false,
     "python.formatting.provider": "yapf"
 }

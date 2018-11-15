@@ -194,6 +194,7 @@ def opening():
 
     if len(sys.argv) != 3:
         print("problem with args")
+        print("usage: main.py [puzzle file] [md = Manhattan, lc = Linear conflict, gr = Greedy, np = not in place, gt = n-MaxSwap, uc = uniform cost]")
         sys.exit(1)
     else:
         settings.heristicChoice = sys.argv[2]
@@ -242,10 +243,10 @@ def parsing(start):
     try:
         check = [correct.remove(n) for line in start for n in line]
     except Exception:
-        print("FATAL ERROR : not sequentail numbers for size %d" % settings.size)
+        print("error : not sequentail numbers for size %d" % settings.size)
         sys.exit(1)
     if (len(correct) != 0):
-        print("FATAL ERROR : not sequentail numbers for size %d" % settings.size)
+        print("error : not sequentail numbers for size %d" % settings.size)
         sys.exit(1)
     return(tuple(tuple(line) for line in start))
 
@@ -343,6 +344,12 @@ def doit(start):
             print("steps to solve: %d" % len(path))
             print("time complexity: %d"% i)
             print("space complexity: %d"% (len(closedSet) + most))
+            pathrev = reversed(path)
+
+            for puz in pathrev:
+                for inner in puz:
+                    print(inner)
+                print("\n",end='')
             return(path,i,most + len(closedSet))
 
         for neigh in find_neighbors(current):
