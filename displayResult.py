@@ -1,6 +1,5 @@
 import tkinter as tk
 import time
-from puzzleGen import puzzleGenerator
 from keatongen import puzzleGenSolvability
 from gui_interface import staringNpuzzleWithGui
 import settings
