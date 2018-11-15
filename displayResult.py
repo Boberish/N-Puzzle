@@ -3,6 +3,7 @@ import time
 from puzzleGen import puzzleGenerator
 from keatongen import puzzleGenSolvability
 from gui_interface import staringNpuzzleWithGui
+import settings
 
 
 LARGE_FONT = ("Times", 20)
@@ -34,8 +35,7 @@ class MyMainWindow(tk.Frame):
         label2.pack(pady=10, padx=10)
         var_solv = tk.StringVar(value=True)
         choice_solvable = tk.Radiobutton(self, text="Solvable", variable=var_solv, value=True)
-        choice_unsolvable = tk.Radiobutton(
-            self, text="Unsolvable", variable=var_solv, value=False)
+        choice_unsolvable = tk.Radiobutton(self, text="Unsolvable", variable=var_solv, value=False)
         choice_solvable.pack()
         choice_unsolvable.pack()
 
@@ -79,10 +79,12 @@ class MyMainWindow(tk.Frame):
 
         size = int(var_size.get())
         solv = var_solv.get()
-        print("solvable ??? -------------------:", solv)
-        # HERE call the real function
 
-        # retPuzz = puzzleGenSolvability(False, size)
+        if solv == '0':
+            unsolvablePuzzle = puzzleGenSolvability(False, size)
+            self.printUnsolvablePuzzle(unsolvablePuzzle)
+            return 0
+
         retPuzz = puzzleGenSolvability(True, size)
         retPath = staringNpuzzleWithGui(size, retPuzz, var_choix)
 
@@ -93,10 +95,28 @@ class MyMainWindow(tk.Frame):
         puzz = next(lst)
         self.printPuzzle(puzz, nbStepPath)
 
+    def printUnsolvablePuzzle(self, puzz):
+        tk.Label(self.Frame1bis, text='This Puzzle is Unsolvable ', fg='#cc0052', font=LARGE_FONT).grid(row=1, column=1)
+
+        self.exit_button = tk.Button(self.Frame2, width=7, height=2, text="Exit", padx=10, pady=10, command=self.quit)
+
+        y = 0
+        x = 0
+        for line in puzz:
+            for num in line:
+                tmp = str(num)
+                if (num == 0):
+                    tk.Label(self.Frame1, text=' %s ' % tmp, borderwidth=5, relief="sunken", padx=10, pady=10, foreground="#cc0052", font=LARGE_FONT).grid(row=y, column=x, padx=10, pady=10)
+                else :
+                    tk.Label(self.Frame1, text=' %s ' % tmp, borderwidth=5, relief="sunken", padx=10, pady=10, font=LARGE_FONT).grid(row=y, column=x, padx=10, pady=10)
+                x += 1
+            y +=1
+            x = 0
+
+        self.exit_button.grid(row=y + 1, column=x + 1)
+
     def printPuzzle(self, puzz, nbStepPath):
-        # nbIteration = "55000"
-        # memComplexity = " 54846mb"
-        tk.Label(self.Frame1bis, text='Here we go, we save the puzzle in ' + str(settings.nbStepPath) + ' steps \n and with ' + str(settings.nbIteration) + ' Iterations. \n Memory complexity: ' + memComplexity + '.', fg='#228B22', font=LARGE_FONT).grid(row=1, column=1)
+        tk.Label(self.Frame1bis, text='Here we go, we save the puzzle in ' + str(nbStepPath) + ' steps \n and with ' + str(settings.nbIteration) + ' Iterations. \n Memory complexity: ' + str(settings.memComplexity) + '.', fg='#228B22', font=LARGE_FONT).grid(row=1, column=1)
 
         self.next_button = tk.Button(self.Frame2, width=7, height=2, text="Next Step", padx=10, pady=10, command=lambda: self.nextStep(x, y, nbStepPath))
         self.exit_button = tk.Button(self.Frame2, width=7, height=2, text="Exit", padx=10, pady=10, command=self.quit)
@@ -107,7 +127,7 @@ class MyMainWindow(tk.Frame):
             for num in line:
                 tmp = str(num)
                 if (num == 0):
-                    tk.Label(self.Frame1, text=' %s ' % tmp, borderwidth=5, relief="sunken", padx=10, pady=10, foreground="maroon", font=LARGE_FONT).grid(row=y, column=x, padx=10, pady=10)
+                    tk.Label(self.Frame1, text=' %s ' % tmp, borderwidth=5, relief="sunken", padx=10, pady=10, foreground="#cc0052", font=LARGE_FONT).grid(row=y, column=x, padx=10, pady=10)
                 else :
                     tk.Label(self.Frame1, text=' %s ' % tmp, borderwidth=5, relief="sunken", padx=10, pady=10, font=LARGE_FONT).grid(row=y, column=x, padx=10, pady=10)
                 x += 1
