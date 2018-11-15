@@ -116,7 +116,7 @@ class MyMainWindow(tk.Frame):
         self.exit_button.grid(row=y + 1, column=x + 1)
 
     def printPuzzle(self, puzz, nbStepPath):
-        tk.Label(self.Frame1bis, text='Here we go, we save the puzzle in ' + str(nbStepPath) + ' steps \n and with ' + str(settings.nbIteration) + ' Iterations. \n Memory complexity: ' + str(settings.memComplexity) + '.', fg='#228B22', font=LARGE_FONT).grid(row=1, column=1)
+        tk.Label(self.Frame1bis, text='Here we go, we solve the puzzle in ' + str(nbStepPath) + ' steps \n and with ' + str(settings.nbIteration) + ' Iterations. \n Memory complexity: ' + str(settings.memComplexity) + '.', fg='#005580', font=LARGE_FONT).grid(row=1, column=1)
 
         self.next_button = tk.Button(self.Frame2, width=7, height=2, text="Next Step", padx=10, pady=10, command=lambda: self.nextStep(x, y, nbStepPath))
         self.exit_button = tk.Button(self.Frame2, width=7, height=2, text="Exit", padx=10, pady=10, command=self.quit)
@@ -151,9 +151,10 @@ class MyMainWindow(tk.Frame):
 
 # On crée une fenêtre, racine de notre interface
 myWindow = tk.Tk()
+myWindow.attributes("-topmost", True)
 myWindow.eval('tk::PlaceWindow %s center' % myWindow.winfo_pathname(myWindow.winfo_id()))
-interface = MyMainWindow(myWindow)
 
+interface = MyMainWindow(myWindow)
 interface.mainloop()
 try:
     interface.destroy()
