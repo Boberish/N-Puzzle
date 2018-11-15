@@ -72,8 +72,8 @@ def h_cost(puzzle):
         ret = g_thing(puzzle, 0, 0)
     if settings.heristicChoice == 'lc':
         return (manhat(puzzle) + lineByline(puzzle))
-    if settings.heristicChoice == 'gr':
-        return  (manhat(puzzle) * 5)
+    # if settings.heristicChoice == 'gr':
+    #     return  (manhat(puzzle) * 5)
     if settings.heristicChoice == 'uc':
         return (0)    
 
